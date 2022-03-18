@@ -34,7 +34,7 @@
 import axios from 'axios'
 import { toast } from 'bulma-toast'
 export default {
-  name: 'product',
+  name: 'ProductView',
   data() {
     return {
       product: {},
