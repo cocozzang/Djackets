@@ -11,7 +11,7 @@
               <input type="text" class="input" v-model="username">
             </div>
           </div>
-          
+
           <div class="field">
             <label>Password</label>
             <div class="control">
@@ -25,7 +25,7 @@
 
           <div class="field">
             <div class="control">
-              <button type="submit" class="button is-dark" @click="submitForm()">Sign up</button>
+              <button type="submit" class="button is-dark" @click="submitForm()">Log in</button>
             </div>
           </div>
 
@@ -39,59 +39,59 @@
 </template>
 
 <script>
-import axios from 'axios'
-export default {
-  name: 'LogInView',
-  data() {
-    return {
-      username: '',
-      password: '',
-      errors: [],
-    }
-  },
-  mounted() {
-    document.title = 'Log in | Djackets'
-  },
-  methods: {
-    async submitForm() {
-      axios.defaults.headers.common["Authorization"] = ""
-
-      localStorage.removeItem("token")
-
-      const formData = {
-        username: this.username,
-        password: this.password,
+  import axios from 'axios'
+  export default {
+    name: 'LogInView',
+    data() {
+      return {
+        username: '',
+        password: '',
+        errors: [],
       }
+    },
+    mounted() {
+      document.title = 'Log in | Djackets'
+    },
+    methods: {
+      async submitForm() {
+        axios.defaults.headers.common["Authorization"] = ""
 
-      await axios
-        .post("/api/v1/token/login/", formData)
-        .then(response => {
-          const token = response.data.auth_token
+        localStorage.removeItem("token")
 
-          this.$store.commit('setToken', token)
+        const formData = {
+          username: this.username,
+          password: this.password,
+        }
 
-          axios.defaults.headers.common["Authorization"] = "Token " + token
+        await axios
+          .post("/api/v1/token/login/", formData)
+          .then(response => {
+            const token = response.data.auth_token
 
-          localStorage.setItem("token", token)
+            this.$store.commit('setToken', token)
 
-          const toPath = this.$route.query.to || '/cart'
+            axios.defaults.headers.common["Authorization"] = "Token " + token
 
-          this.$router.push(toPath)
-        })
-        .catch(error => {
-          if (error.response) {
-            for (const property in error.response.data) {
-              this.errors.push(`${property}: ${error.response.data[property]}`)
+            localStorage.setItem("token", token)
+            
+            const toPath = this.$route.query.to || '/cart'
+
+            this.$router.push(toPath)
+          })
+          .catch(error => {
+            if (error.response) {
+              for (const property in error.response.data) {
+                this.errors.push(`${property}: ${error.response.data[property]}`)
+              }
+            } else {
+              this.errors.push('Something went wrong. Please try again')
+
+              console.log(JSON.stringify(error))
             }
-          } else {
-            this.errors.push('Something went wrong. Please try again')
-
-            console.log(JSON.stringify(error))
-          }
-        })
-    }
-  },
-}
+          })
+      }
+    },
+  }
 </script>
 
 <style>
