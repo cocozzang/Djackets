@@ -59,7 +59,6 @@ export default {
   },
   mounted() {
     this.cart = this.$store.state.cart
-    console.log(this.$store.state.cart.items)
   },
   methods: {
     removeFromCart(item) {
